@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Scanner;
 
 
 public class LogTest {
@@ -33,6 +34,47 @@ public class LogTest {
         LogMapper logMapper=sqlSession.getMapper(LogMapper.class);
         List<Log> log=logMapper.findAcc(100010,100011);
         System.out.println(log);
+
+    }
+
+    @Test
+    public void Sql() throws Exception{
+        InputStream config = Resources.getResourceAsStream("mybatis.xml");
+        SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(config);
+        SqlSession sqlSession = factory.openSession();
+
+        LogMapper logMapper=sqlSession.getMapper(LogMapper.class);
+        List<Log> logs=logMapper.findwhen("100010","100011");
+        System.out.println(logs);
+    }
+
+    @Test
+    public void update() throws Exception{
+        InputStream config = Resources.getResourceAsStream("mybatis.xml");
+        SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(config);
+        SqlSession sqlSession = factory.openSession();
+
+        LogMapper logMapper=sqlSession.getMapper(LogMapper.class);
+        Log log=new Log();
+        log.setId(1);
+        log.setAccOut("100011");
+        log.setAccIn("100010");
+        int index=logMapper.update(log);
+        System.out.println(index);
+        sqlSession.commit();
+        sqlSession.close();
+
+    }
+
+    @Test
+    public void trim() throws Exception{
+        InputStream config = Resources.getResourceAsStream("mybatis.xml");
+        SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(config);
+        SqlSession sqlSession = factory.openSession();
+
+        LogMapper logMapper=sqlSession.getMapper(LogMapper.class);
+        List<Log> logs=logMapper.findtrim(null);
+        sqlSession.close();
 
     }
 }

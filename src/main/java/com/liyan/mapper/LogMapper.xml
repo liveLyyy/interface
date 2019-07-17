@@ -10,4 +10,61 @@
         select * from log where accout=#{accout} and accin=#{accin}
     </select>
 
+    <select id="findAccoutAccin" resultType="Log">
+        select * from log where 1=1
+        <!--ognl表达式，直接写key或对象的属性,不需要添加任何特殊符号-->
+        <if test="accout !=null and accout != ''">
+            and accout=#{accout}
+        </if>
+        <if test="accin != null and accin != ''">
+            and accin=#{accin}
+        </if>
+    </select>
+
+    <select id="findAccAcc" resultType="Log">
+        select * from log
+        <where>
+            <if test="accout !=null and accout != ''">
+                and accout=#{accout}
+            </if>
+            <if test="accin != null and accin != ''">
+                and accin=#{accin}
+            </if>
+        </where>
+    </select>
+
+    <select id="findwhen" resultType="Log">
+        select * from log
+        <where>
+            <choose>
+                <when test="accout !=null and accout != ''">
+                    and accout=#{accout}
+                </when>
+                <when test="accin != null and accin != ''">
+                    and accin=#{accin}
+                </when>
+            </choose>
+        </where>
+    </select>
+
+    <update id="update" parameterType="Log">
+        update log
+            <set>
+                <if test="accOut != null and accOut != ''">
+                    accout=#{accOut},
+                </if>
+                <if test="accIn != null and accIn != ''">
+                    accin=#{accIn}
+                </if>
+            </set>
+        where id=#{id}
+    </update>
+
+    <select id="findtrim" resultType="Log" parameterType="Log">
+        select * from log
+        <trim prefix="where" prefixOverrides="and">
+            and accout=#{accont}
+        </trim>
+    </select>
+
 </mapper>
