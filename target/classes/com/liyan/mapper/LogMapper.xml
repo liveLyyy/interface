@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace:可以理解成实现了的全路径（包名+类名）-->
+<mapper namespace="com.liyan.mapper.LogMapper">
+    <select id="findAll" resultType="Log">
+        select * from log
+    </select>
+
+    <select id="findAcc" resultType="Log">
+        select * from log where accout=#{accout} and accin=#{accin}
+    </select>
+
+</mapper>
