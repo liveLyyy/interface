@@ -22,4 +22,8 @@ public interface LogMapper {
     int update(Log log);
 
     List<Log> findtrim(Log log);
+
+    int updatetrim(Log log);
+
+    List<Log> findIn(List<Integer> list);
 }

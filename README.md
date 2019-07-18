@@ -43,7 +43,7 @@ List<Log> findAcc(@Param("accout") int accout, @Param("accin") int accin);
         </where>
     </select>
 ```
->>2.3、set语句:去掉最后一个逗号,如果set里面有内容生成set关键字，如果没有就不生成,id=#{id}是防止set中没有内容mybatis不生成关键字
+>>2.3、set语句:去掉最后一个逗号,如果set里面有内容生成set关键字，如果没有就不生成,id=#{id}是防止set中没有内容mybatis不生成关键字<br>
 ```xml
 <update id="update" parameterType="Log">
         update log
@@ -58,4 +58,52 @@ List<Log> findAcc(@Param("accout") int accout, @Param("accin") int accin);
         where id=#{id}
     </update>
 ```
->>2.4、trim语句:
+>>2.4、trim语句:prefix:在前面添加内容、prefixOverrides在前面删除内容、suffix在后面添加内容、suffixOverrides在后面删除内容<br>
+```xml
+<select id="findtrim" resultType="Log" parameterType="Log">
+        select * from log
+        <trim prefix="where" prefixOverrides="and">
+            and accout=#{accOut}
+        </trim>
+    </select>
+<update id="updatetrim" parameterType="Log">
+        update log
+            <trim prefix="set" suffixOverrides=",">
+                <if test="accOut != null and accOut != ''">
+                    accout=#{accOut},
+                </if>
+                <if test="accIn != null and accIn != ''">
+                    accin=#{accIn},
+                </if>
+            </trim>
+        where id=#{id}
+    </update>
+```
+>>2.5、bind语句：给参数重新赋值<br>
+```xml
+ <select id="findbind" resultType="Log" parameterType="Log">
+        <bind name="money" value="'$'+money"/>
+        <bind name="accin" value="'%'+accin+'%'"/>
+    </select>
+```
+>>2.6、foreach语句：循环参数内容，还具备在内容前后添加内容，添加分隔符功能，适用in查询、批量新增中（mybatis中foreach的效率比较低）<br>
+>>collection:要遍历的集合，item：迭代遍历、#{迭代变量名}获取内容，open：循环后左侧添加的内容，close：循环后右边添加的内容，separator：循环是的分隔符<br>
+```xml
+ <select id="findIn" parameterType="list" resultType="Log">
+      select * from log where id in
+      <foreach collection="list" item="abc" open="(" close=")" separator=",">
+          #{abc}
+      </foreach>
+    </select>
+```
+>>2.7、sql和include语句：适用于多表联合查询，提高代码的复用性<br>
+```xml
+  <sql id="mysql">
+        id,accout,accin,money
+    </sql>
+  <select id="findinclude" parameterType="log" resultType="Log">
+        select
+        <include refid="mysql"></include>
+        from log
+    </select>
+```

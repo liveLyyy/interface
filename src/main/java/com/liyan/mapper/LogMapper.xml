@@ -63,8 +63,41 @@
     <select id="findtrim" resultType="Log" parameterType="Log">
         select * from log
         <trim prefix="where" prefixOverrides="and">
-            and accout=#{accont}
+            and accout=#{accOut}
         </trim>
+    </select>
+    <update id="updatetrim" parameterType="Log">
+        update log
+            <trim prefix="set" suffixOverrides=",">
+                <if test="accOut != null and accOut != ''">
+                    accout=#{accOut},
+                </if>
+                <if test="accIn != null and accIn != ''">
+                    accin=#{accIn},
+                </if>
+            </trim>
+        where id=#{id}
+    </update>
+
+    <select id="findbind" resultType="Log" parameterType="Log">
+        <bind name="money" value="'$'+money"/>
+        <bind name="accin" value="'%'+accin+'%'"/>
+    </select>
+
+    <select id="findIn" parameterType="list" resultType="Log">
+      select * from log where id in
+      <foreach collection="list" item="abc" open="(" close=")" separator=",">
+          #{abc}
+      </foreach>
+    </select>
+
+    <sql id="mysql">
+        id,accout,accin,money
+    </sql>
+    <select id="findinclude" parameterType="log" resultType="Log">
+        select
+        <include refid="mysql"></include>
+        from log
     </select>
 
 </mapper>
